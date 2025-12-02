@@ -1,7 +1,7 @@
 package com.iciaran.aoc25
 
 import java.io.File
-import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -16,6 +16,13 @@ class Day02 : Day<List<Pair<Long, Long>>> {
     }
 
     fun getInvalid(range: ClosedRange<Long>, repeats: Int): List<Long> {
+        val startDigits = 1 + floor(log10(range.start.toDouble())).toInt()
+        val endDigits = 1 + floor(log10(range.endInclusive.toDouble())).toInt()
+
+        if (startDigits == endDigits && startDigits % repeats != 0) {
+            return listOf()
+        }
+
         val invalid = mutableListOf<Long>()
         var digits = 0
 
@@ -72,7 +79,7 @@ class Day02 : Day<List<Pair<Long, Long>>> {
         // Use a set to only keep unique invalid numbers
 
         val invalid = mutableSetOf<Long>()
-        val maxDigits = ceil(log10(range.endInclusive.toDouble())).toInt()
+        val maxDigits = floor(log10(range.endInclusive.toDouble())).toInt() + 1
 
         for (i in (2..maxDigits)) {
             invalid.addAll(
