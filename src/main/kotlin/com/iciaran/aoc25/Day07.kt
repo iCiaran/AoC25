@@ -21,37 +21,39 @@ class Day07 : Day<Manifold> {
     }
 
     override fun part1(input: Manifold): String {
-        var current = input.splitters[0].mapIndexed { x, _ -> x == input.start.first }
-        var splitCount = 0
+        val initial = Array(input.splitters[0].size) { false }
+        initial[input.start.first] = true
 
-        for (y in (1..<input.splitters.size)) {
-            val next = Array(current.size) { false }
+        return input.splitters.drop(1)
+            .fold(Pair(initial, 0)) { (current, count), splitters ->
+                val next = Array(current.size) { false }
 
-            for (x in current.indices) {
-                if (current[x] && input.splitters[y][x]) {
-                    splitCount++
-                    next[x - 1] = true
-                    next[x + 1] = true
-                } else if (current[x]) {
-                    next[x] = true
-                }
-            }
+                val splitCount = current.indices.map { x ->
+                    if (current[x] && splitters[x]) {
+                        next[x - 1] = true
+                        next[x + 1] = true
+                        1
+                    } else {
+                        if (current[x]) {
+                            next[x] = true
+                        }
+                        0
+                    }
+                }.sum()
 
-            current = next.toList()
-        }
-
-        return splitCount.toString()
+                Pair(next, count + splitCount)
+            }.second.toString()
     }
 
     override fun part2(input: Manifold): String {
-        var current = Array(input.splitters[0].size) { 0L }
-        current[input.start.first] = 1L
+        val initial = Array(input.splitters[0].size) { 0L }
+        initial[input.start.first] = 1L
 
-        for (y in (1..<input.splitters.size)) {
+        return input.splitters.drop(0).fold(initial) { current, splitters ->
             val next = Array(current.size) { 0L }
-            
+
             for (x in current.indices) {
-                if (current[x] > 0 && input.splitters[y][x]) {
+                if (current[x] > 0 && splitters[x]) {
                     next[x - 1] += current[x]
                     next[x + 1] += current[x]
                 } else if (current[x] > 0) {
@@ -59,9 +61,7 @@ class Day07 : Day<Manifold> {
                 }
             }
 
-            current = next
-        }
-
-        return current.sum().toString()
+            next
+        }.sum().toString()
     }
 }
