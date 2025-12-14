@@ -25,7 +25,6 @@ class Day10 : Day<List<Machine>> {
                     .map(String::toInt)
             }
 
-
             val joltages = it.last()
                 .substringAfter("{")
                 .substringBefore("}")
@@ -77,7 +76,7 @@ class Day10 : Day<List<Machine>> {
     }
 
     override fun part2(input: List<Machine>): String {
-        return "-1"
+        return "python3 src/main/python/Day10.py"
     }
 
 }
